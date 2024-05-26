@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  s3api:
+    build:
+      context: .
+      dockerfile: src/microservices/S3ApiMicroservice/Dockerfile
+    ports:
+      - 44320:80
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "27001:5432"
+    environment:
+      POSTGRES_DB: "db"
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "root"
+
+  auth:
+    build:
+      context: .
+      dockerfile: src/microservices/AuthMicroservice/Dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - 44325:80
+
+  content:
+    build:
+      context: .
+      dockerfile: src/microservices/ContentMicroservice/Dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - 44326:80
+
+  player:
+    build:
+      context: .
+      dockerfile: src/microservices/PlayerMicroservice/Dockerfile
+    ports:
+      - 44327:80
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: src/gateways/Gateway/Dockerfile
+    depends_on:
+      - auth
+      - content
+      - player
+    ports:
+      - 44328:80
+
+  client:
+    build:
+      context: .
+      dockerfile: src/uis/client/Dockerfile
+    depends_on:
+      - api-gateway
+    ports:
+      - 44329:3000

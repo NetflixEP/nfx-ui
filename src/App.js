@@ -10,6 +10,7 @@ import {
     Link,
 } from "react-router-dom";
 import SignUpScreen from "./screens/SignUpScreen";
+import {AdminScreen} from "./screens/AdminScreen";
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Router>
               <Routes>
                   <Route path="/" element={<HomeScreen />} />
+                  <Route path="/admin" element={<AdminScreen />} />
                   <Route path="/login" element={<LoginScreen />} />
                   <Route path="/signIn" element={<SignInScreen />} />
                   <Route path="/signUp" element={<SignUpScreen />} />
